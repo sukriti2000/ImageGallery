@@ -1,0 +1,787 @@
+{% extends "gallery/layout.html" %}
+{% load static %}
+{% block style %}
+<style>
+	body{
+	
+		font-family: sans-serif;
+		font-size: 17px; 
+	}
+	.box-area{ 
+		display: flex;
+		flex-wrap: wrap;
+		max-width: 100%; 
+		justify-content: space-around;
+		align-items: center;
+		padding: 30px 1vw;
+	}
+	.single{
+		position: relative;
+		flex: 25%;
+		max-width: 25%;
+		height: 400px;
+		transition: 0.5s ease;
+		margin-top: 10px;
+		overflow: hidden; 
+		transition: 0.5s ease,all; 
+	}
+	.single>img{
+		min-height: 100%;
+		width: 100%;
+		transition: 0.5s ease;
+	}
+	.single:hover img{
+		transform: scale(1.2);
+	}
+	.hover_show{
+		display: none;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0,0,0,0.5);
+		transition:.5s ease;
+		align-content: center;
+		justify-content: center;
+	}
+	.single:hover .hover_show{
+		display: flex; 
+	}
+	
+	.profile_pic{ 
+		max-width: 50%;
+		max-height:100%;
+		flex:50%;
+		display: flex;
+		justify-content: justify;
+		padding-top: 340px;
+		padding-left: 20px;
+
+	}
+	.pic_detail{
+		flex :50%;
+        height: 100%;
+		width: 50%;
+		display: flex;
+		justify-content:flex-end;
+		padding-top:340px;
+		padding-right: 20px;
+		color: white;
+	}
+	.pic_detail i{
+		font-size: 25px;
+		color: white;
+		/*margin-left: 30px;*/
+	}
+	
+	.close{
+		position:fixed;
+		right : 30px;
+		top : 50px;
+		color: black;
+		font-size: 50px;
+		
+	}
+	.close:hover,.close:focus{
+		color:#b3b3b3;
+		cursor: pointer;
+	}
+	.title{
+		background-image:url("{% static 'gallery/background3.jpg' %}");
+		height: 500px;
+		max-width: 100vw;
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: cover;
+		background-attachment: fixed;
+		margin-bottom: 20px;
+		 }
+	.line{
+		padding-top:200px;
+		padding-left: 30%;
+		height: 200px;
+		width: 70%;
+	}			
+	.line h1{
+		align-items: justify;
+		font-size: 45px;
+		color: white;
+		padding-bottom: 20px;
+	}
+	.form2{
+		display: flex;
+		height: 60px;
+	}
+	.form2 input{
+		border-bottom-left-radius: 6px;
+        border-top-left-radius: 6px;
+        border:none;
+        width: 700px;
+        padding: 20px;
+        font-size: 20px;
+	}
+	.form2 button{
+		border: none;
+        background-color: white;
+        border-bottom-right-radius: 6px;
+        border-top-right-radius: 6px;
+        align-items: center; 
+        padding: 20px;
+        font-size: 20px;
+	}
+	.page{
+		display: flex;
+		align-content: center;
+		margin-left: 45%
+	}
+	.page li{
+		text-decoration: none;
+		display: inline-block;
+		padding: 20px;
+		height: 50px;
+		width: 80px;
+		
+	}
+	.page li a{
+		text-decoration: none;
+		color: black;
+		font-weight: 600;
+		font-size: 20px;
+	
+	}
+	.page li:hover{
+		border-bottom: 2px solid blue;
+		color: blue;
+	}
+     
+	
+    .modal_image_download_button li{ 
+    	list-style: none;
+    	display: inline-block;
+    	padding: 10px;   
+    	height: 40px;
+    	width: 100px;
+    	border: 1px solid black;
+    	text-align: center;
+    	position: relative;
+    }
+
+    .modal_image_download_button .download_button{
+    	width: 130px;
+    	height: 40px;
+    	background-color:#730099;
+    	border: none;
+        font-size: 16px;
+        color: white;
+
+    }
+	.sub-menu{
+		display: block;
+		position: absolute;
+		height : 0;
+		background-color: white;
+		margin-top:10px;
+		overflow: hidden;
+		right: 0px;
+		transition: 0.5s ease;
+	}
+	.modal_image_download_button ul li:hover .sub-menu{
+		height: auto;
+	}
+	.sub-menu ul li{
+		height:50px;
+		width: 180px;
+		color: black;
+		border:0.7px solid #cccccc;
+	}
+	.sub-menu ul li a{
+		text-decoration: none;
+		font-size: 20px;
+		color: black;
+		display: block;
+	}
+	.sub-menu ul li:hover{
+		cursor: pointer;
+		background-color: black;
+		color: white;
+	}
+	.sub-menu ul li a:hover{
+		color: white;
+		display: block;
+	}
+	
+	.info .button ul{
+		display: flex;
+		justify-content: center;
+
+	}
+
+	#myModal{
+		display: none; 
+		position: fixed;
+		z-index: 10;
+		top: 0%;
+		left: 0%; 
+		width: 100vw; 
+		min-height: 100vh;
+		transition : 0.5s ease;
+	    } 
+    .modal_container{
+    	display: flex;
+    	background-color : white;
+    }
+    .main_img{
+    	flex:50%; 
+    	width: 50%;
+    	max-height:100vh;
+    	padding: 150px 80px;
+    }
+    .details{
+    	flex:50%; 
+    	width: 50%;
+    	height:100vh;
+    	padding-top:50px;  
+    	padding-right: 100px;
+    	flex-direction: column;
+    }
+    .main_img img {
+    	display: flex;
+    	max-width: 600px;
+		height: auto;
+	}
+    .profile{
+    	display: flex;
+    	justify-content: flex-end;
+    }
+	.Modal_detail_box{  
+		display: flex;
+		flex-direction: column; 
+		height:40%;
+		width: 100%;
+		}
+	
+	.modal_image_description{ 
+		flex: 100%;
+		height: 50%;	
+		margin-bottom: 10px;
+	}
+	.modal_image_description_title{
+		font-size: 30px;
+		letter-spacing: 2px;
+		font-weight: 200px;
+		padding-bottom: 30px;
+		
+	}
+	.modal_image_description ul li{
+		list-style: none;
+		
+
+	}
+	.modal_image_description ul {
+		padding-bottom: 20px;
+	}
+	.modal_image_description p{
+		display: inline-block;
+	}
+	.edit_images_section{ 
+		display: flex;
+		height:60%;  
+		width : 100%;
+		flex-direction: column;
+	}
+
+	.edited_image{
+		flex: 100%;
+		width: 100%;
+		
+	}
+
+    .edited_image img{
+    	height: 250px;
+    	width: 350px;
+    	padding-bottom: 30px;
+    }	
+	.edited_images_button ul li{
+	   list-style:none;
+	   display: inline-block;
+	}
+	.edited_images_button{
+		flex: 100%;
+		justify-content: center;
+	}
+    .edited_images_button button{
+    	padding: 12px 5px;
+
+    	width: 120px;
+    	margin-right: 6px;
+    	border: none;
+    	background-color: #862d59;
+    	color: white;
+
+    }
+    .edited_images_button a{
+    	text-decoration: none;
+    	color: white;
+    }
+    
+    @media(max-width: 540px){
+      	.box-area{ 
+		flex-direction: column;
+		}
+	.single{
+		flex: 100%;
+		max-width: 100vw;
+		height: 200px;
+       }
+    .title{
+		height: 300px;
+		max-width: 100vw;
+		margin-bottom: 10px;
+		 }
+	.line{
+		padding-top:100px;
+		padding-left: 20%;
+		height: 100px;
+		width: 90%;
+	}			
+	.line h1{
+		font-size: 20px;
+		padding-bottom: 19px;
+	}
+	.form2{
+		height: 30px;
+	   }
+	.form2 input{
+		border-bottom-left-radius: 3px;
+        border-top-left-radius: 3px;
+        width: 300px;
+        padding: 10px;
+        font-size: 12px;
+	}
+	.form2 button{
+		border-bottom-right-radius: 3px;
+        border-top-right-radius: 3px;
+        padding: 10px;
+        font-size: 12px;
+	}
+	.page li{
+		padding: 15px;
+		height: 40px;
+		width: 140px;
+		justify-content: center;
+		}
+	.page li a{
+		font-size: 12px;
+	   }
+	   .profile_pic{ 
+		max-width: 50%;
+		max-height:100%;
+		flex:50%;
+		display: flex;
+		justify-content: justify;
+		padding-top: 170px;
+		padding-left: 10px;
+
+	}
+	.pic_detail{
+		flex :50%;
+        height: 100%;
+		width: 50%;
+		display: flex;
+		justify-content:flex-end;
+		padding-top:170px;
+		padding-right: 10px;
+		color: white;
+	}
+	.pic_detail i{
+		font-size: 16px;
+		color: white;
+		
+	}
+	#myModal{
+		position: fixed;
+		z-index: 100;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background-color: rgba(0,0,0,0.4);
+		top : 0;
+		transition : 0.5s ease;
+		max-width: 100vw;
+	}
+	 .modal_container{
+    	position: fixed;
+		overflow-y: scroll;
+		top: 50%;
+		left:50%;
+		transform: translate(-50% , -50%);
+		background-color: #fefefe;
+		padding: 20px;
+		border: 1px solid #888;
+		background-color : white;
+		height: 80vh;
+		width: 80vw;
+		transition : 0.5s ease;
+		display: flex;
+		flex-direction: column;
+    }
+    
+     .main_img{
+    	flex:100% 
+    	width: 100%;
+    	max-height:350px;
+    	padding:2px;
+    }
+    .details{
+    	flex:100%; 
+    	width: 100%;
+    	height:100vh;
+    	padding-top:10px;  
+    	padding-right:5px;
+    	padding-left: 5px;
+    	flex-direction: column;
+    }
+    .main_img img {
+    	
+    	max-width: 250px;
+		height: 200px;
+	}
+   
+	.Modal_detail_box{  
+		display: flex;
+		flex-direction: column; 
+		height:40%;
+		width: 100%;
+		}
+	.modal_image_description_title{
+		font-size: 30px;
+		letter-spacing: 2px;
+		font-weight: 200px;
+		padding-bottom: 15px;
+		
+	}
+	.modal_image_download_button{
+		margin-left: 40px;
+	}
+	 .edited_image img{
+    	height: 200px;
+    	width: 240px;
+    	padding-bottom: 5px;
+    }	
+
+	   .edited_images_button button{
+    	padding: 5px 1px;
+    	font-size: 10px;
+    	width: 100px;
+    	align-self: center;
+        margin: 5px;
+    	}
+    	
+    	.close{
+		right : 5px;
+		top : 2px;
+		}
+
+       .navbar-links{
+            position: fixed;
+            margin-bottom: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #05a081;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            clip-path: circle(100px at 100% -22%);
+            -webkit-clip-path: circle(100px at 100% -22%);
+            transition: all 1s ease-out;
+           }
+        .navbar-links.open{
+            clip-path: circle(650px at 100% -22%);
+            -webkit-clip-path: circle(650px at 100% -22%);
+            }
+            
+        .navbar-links ul{
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            }
+        .navbar-links ul li{
+            padding: 35px;
+             }
+        .ham{
+             display: block;
+             z-index: 2;
+           }
+             header .search{
+            display: none;
+                
+            
+    }
+</style>
+{% endblock %}
+{% block body %}
+
+        <h1 id="heading_top" style="margin-top: 70px;text-align: center;font-family: 'Montserrat Alternates', sans-serif;">----Hot Results----</h1>
+   			<div id="myModal">
+   			 
+        		<div class="modal_container">
+        			<div class="main_img" >
+        				<img id="myModalImage"  this_id="" src="">
+        				
+        			</div>
+        			<span class="close"  onclick="modalClose(this)">&times;</span>
+		        	<div class="details">
+        			    <div class="Modal_detail_box">
+		        		   <div class="modal_image_description">
+		        		   	  <div class="modal_image_description_title">
+		        		   	  	 <h1 id="myModalTitle"></h1>
+		        		   	  	 
+		        		   	  </div>
+		        		   	   
+			        		   	<ul>
+			        		   <li>By : <p id="myModalUser" ></p></li>		
+			        		   <li>Description : <p id="myModalDesc"></p></li>
+			        		   <li>Date : <p  id="myModalDate"></p></li>
+			                    </ul>
+
+			        		    <div class="modal_image_download_button">
+		        				<ul>
+				        		<li class="download_button"><p>Download&nbsp;<i class="fa fa-download" aria-hidden="true"></i></p> 
+				        		<div class="sub-menu">
+				        			<ul>
+				        		    <a href="" id="original" download><li>Original</li></a>
+				        			<a href="" id="large" download><li>(1920x1309)Large</li></a>
+				        			<a href="" id="thumbnail" download><li>(1280x873)Medium</li></a>
+				        			<a href="" id="smart" download><li>(640x436)Small</li></a>
+				        		    </ul>
+
+				        		</div>
+				        		</li>
+			        		    </ul>
+		        			    </div>
+		        				  </div>	
+		        		</div>	  	  
+		
+		        		   
+			        		<div class="edit_images_section" >
+			        			<p style="font-size: 20px;padding-bottom: 10px;">Edit this Image:</p>
+			        			<div class="edited_image">
+			        				<img src="" id="edited_image_url">
+			        			</div>
+			        			<div class="edited_images_button">
+	        				    	<ul>
+	        				    	<li><button id="black_n_white" onclick="black_n_white_edit(this)">Black & white</button>
+	        				    	    		</li>
+	        				    	<li><button id="contrast" onclick="contrast_edit(this)">Contrast</button></li>
+	        				    	 <li><button id="median" onclick="median_edit(this)">Median</button></li>
+	        				    	<li><button id="flip" onclick="flip_edit(this)">Flip</button></li>
+	        				    	<li><button style="background-color: #730099;"><a href="" id="download_edit" download>Edited Image&nbsp;<i class="fa fa-download" aria-hidden="true"></i></a></button></li>
+	        				    	</ul>
+        				         </div>
+        				    </div>
+		        		</div>
+        			</div>
+			        </div>
+
+			      </div>
+        	  </div>
+
+    <div class="box-area">
+  {% for i in result %}
+         <div class="single" onclick="modalOpener(this)"  user="{{i.image.user|title}}" user_id="{{i.image.user.id}}"  title="{{i.image.title|title}}" desc="{{i.image.description}}" imageId="{{i.image.id}}" original="{{i.image.url}}" large="{{i.image.large.url}}" smart="{{i.image.smart.url}}" date="{{i.image.datetime}}" src="{{i.image.thumbnail.url}}" >
+        	<img src="{{i.image.thumbnail.url}}" class="myImage"  >
+
+	        <div class="hover_show" id="{{i.image.id}}"> 
+	        	
+	            	<div class="profile_pic">
+	            		<img src="{{i.image.user.my_pic.first.pic.url}}" check="{{i.image.user.id}}" class="hover_show_image" style="height: 45px;width: 45px;border-radius: 25px;">
+	            	</div>
+	            	<div class="pic_detail" id="{{i.image.id}}">
+	                    {% if user.is_authenticated %}
+				        {%  if i.image.id in lists %}
+				        <div style="padding-right: 10px;" id="{{i.image.id}}">
+				        	<i class="fa fa-heart" aria-hidden="true" onclick="button_change(this);event.stopPropagation()" style="color: red;"></i>
+				        	<h4 style="padding-left: 7px;">{{i.image.liked_image.count}}</h4>
+				        </div>
+				        
+				        {% else %}
+				        <div style="padding-right: 10px;" id="{{i.image.id}}">
+				        	<i class="fa fa-heart" aria-hidden="true" onclick="button_change(this);event.stopPropagation()" style="color: white;"></i> 
+				        	<h4 style="padding-left: 7px;">{{i.image.liked_image.count}}</h4>
+				        </div>
+				        
+				        {% endif %}
+				        
+				        <i onclick="add_collect(this);event.stopPropagation()" id="" class="fa fa-plus-circle" aria-hidden="true"></i>
+				        {% endif %}
+				        
+				    </div>
+				
+	        </div>
+     	</div>
+  {% endfor %}
+	</div>
+
+ 	<script>
+ 		document.querySelector('header').style.backgroundColor="#232a34";
+ 		document.querySelector('.search').style.display="block";
+		const modal=document.getElementById("myModal");
+		const closeButton = document.getElementsByClassName('close')[0];
+		console.log(closeButton);
+		document.querySelectorAll("#hover_show_image").forEach(img=>{
+			var current=img.getAttribute("check");
+			console.log(current);
+			fetch(`/profile_pic/${current}`)
+	                .then(response => response.text())
+	                .then(data=>{
+	                 console.log(data);
+	                    
+	                    
+	                });
+		});
+
+	 
+		
+		const modalOpener = (element)=>{
+			
+			modal.style.display = "block"; 
+
+			
+			document.querySelector('#myModal').style.display = "block";
+			
+			modal.style.top = "0%";
+ 			const elementId = element.getAttribute('imageId');
+ 			
+ 			document.getElementById('myModalImage').setAttribute('src',element.getAttribute('src'));
+ 			document.getElementById('edited_image_url').setAttribute('src',element.getAttribute('src'));
+ 			document.getElementById('myModalImage').setAttribute('this_id',element.getAttribute('imageId'));
+ 			document.getElementById('original').setAttribute('href',element.getAttribute('original'));
+ 			document.getElementById('large').setAttribute('href',element.getAttribute('large'));
+ 			document.getElementById('thumbnail').setAttribute('href',element.getAttribute('src'));
+ 			document.getElementById('smart').setAttribute('href',element.getAttribute('smart'));
+	        const Id = element.getAttribute('user_id');
+	        console.log(Id);
+	 			// fetch(`/profile_pic/${Id}`)
+	    //             .then(response => response.text())
+	    //             .then(data=>{
+	    //                 console.log(data);
+	    //                 document.querySelector('.profile').setAttribute('src',data);
+	                    
+	    //             })
+	               
+	        
+	        document.getElementById('myModalUser').innerHTML = element.getAttribute('user');
+ 			document.getElementById('myModalDate').innerHTML = element.getAttribute('date');
+ 			document.getElementById('myModalTitle').innerHTML = element.getAttribute('title');
+ 			document.getElementById('myModalDesc').innerHTML = element.getAttribute('desc');
+
+ 			
+
+	 		}
+	 		const modalClose = (element)=>{
+			document.querySelector('#myModal').style.display = "none";
+ 	  		modal.style.display="none";
+ 				
+	 		}
+
+	
+
+		 function button_change(x){
+            const type=x.style.color;
+            const id=x.parentElement.id;
+            console.log(type);
+            if(type === 'white'){
+                fetch(`/add_like/${id}`)
+                .then(response => response.text())
+                .then(text =>{
+                    console.log(text);
+                })
+                x.style.color="red";
+                let counter=x.parentElement.lastElementChild.innerHTML;
+                counter++;
+                x.parentElement.lastElementChild.innerHTML=counter;
+            }
+            else{
+                fetch(`/add_like/${id}`)
+                .then(response => response.text())
+                .then(text =>{
+                    console.log(text);
+                })
+                x.style.color="white";
+                let counter=x.parentElement.lastElementChild.innerHTML;
+                counter--;
+                x.parentElement.lastElementChild.innerHTML=counter;
+            }
+        }
+        function add_collect(x){
+        	const id=x.parentElement.id;
+        	fetch(`add_collection/${id}`)
+        	.then(response => response.text())
+        	.then(text =>{
+        		console.log(id);
+        		alert("add to your collection ");
+        	})
+        }
+        function black_n_white_edit(x){
+        	const image_id=document.querySelector("#myModalImage").getAttribute("this_id");
+        	document.querySelector("#download_edit").setAttribute('href',"");
+        	
+        	fetch(`edit_bw/${image_id}`)
+        	.then(response => response.text())
+        	.then(text =>{
+        	document.querySelector("#download_edit").setAttribute('href',text);
+        	document.querySelector('#edited_image_url').setAttribute('src',text)
+        	})
+        }
+         function contrast_edit(x){
+        	const image_id=document.querySelector("#myModalImage").getAttribute("this_id");
+        	document.querySelector("#download_edit").setAttribute('href',"");
+        	
+        	fetch(`edit_contrast/${image_id}`)
+        	.then(response => response.text())
+        	.then(text =>{
+        	document.querySelector("#download_edit").setAttribute('href',text);
+        	document.querySelector('#edited_image_url').setAttribute('src',text);
+        	})
+        }
+         function median_edit(x){
+        	const image_id=document.querySelector("#myModalImage").getAttribute("this_id");
+        	document.querySelector("#download_edit").setAttribute('href',"");
+        	
+        	fetch(`edit_median/${image_id}`)
+        	.then(response => response.text())
+        	.then(text =>{
+        	document.querySelector("#download_edit").setAttribute('href',text);
+        	document.querySelector('#edited_image_url').setAttribute('src',text);
+        	})
+        }
+         function flip_edit(x){
+        	const image_id=document.querySelector("#myModalImage").getAttribute("this_id");
+        	document.querySelector("#download_edit").setAttribute('href',"");
+        	
+        	fetch(`edit_flip/${image_id}`)
+        	.then(response => response.text())
+        	.then(text =>{
+        	document.querySelector("#download_edit").setAttribute('href',text);
+        	document.querySelector('#edited_image_url').setAttribute('src',text);
+        	})
+        }
+          document.querySelector('.ham').addEventListener('click',function(){
+          	console.log('hello');
+                    document.querySelector('.navbar-links').classList.toggle("open");
+                    if(document.querySelector('.box-area').style.display==='none'){
+                    	document.querySelector('.box-area').style.display='block';
+                    }
+                    else{
+                    	document.querySelector('.box-area').style.display='none';
+                    }
+                    
+                });
+   
+	</script>
+{% endblock %}

@@ -1,0 +1,227 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Image Gallery</title>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+	<style>
+		
+      
+	html,
+	body {
+	  position: relative;
+	  height: 100vh;
+	  height: 100vh;
+	  max-width: 100vw;
+	  background-image:url("{% static 'gallery/background.jpg' %}");
+	  background-repeat: no-repeat;
+	  background-position: center;
+	  background-size: cover;
+	  background-attachment: fixed;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	 font-family: 'Montserrat Alternates', sans-serif;
+	  -webkit-font-smoothing: antialiased;
+	  -moz-osx-font-smoothing: grayscale;
+	}
+	.form-structor {
+  background-color: #222;
+  border-radius: 15px;
+  height: 550px;
+  width: 400px;
+  position: relative;
+  overflow: hidden;
+}
+.form-structor::after {
+  content: "";
+  opacity: 0.8;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 500px;
+background-color: #f9ea8f;
+background-image: linear-gradient(315deg, #f9ea8f 0%, #aff1da 74%);
+}
+.form-structor .signup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  width: 65%;
+  z-index: 5;
+  -webkit-transition: all 0.3s ease;
+}
+.form-structor .signup .form-title {
+  color: #fff;
+  font-size: 1.7em;
+  text-align: center;
+ 
+}
+.form-structor .signup .form-title span {
+  color: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: all 0.3s ease;
+
+}
+
+.form-structor .signup .form-holder {
+  border-radius: 15px;
+  background-color: #fff;
+  overflow: hidden;
+  margin-top: 50px;
+  opacity: 1;
+  visibility: visible;
+  -webkit-transition: all 0.3s ease;
+}
+.form-structor .signup .form-holder .input {
+  border: 0;
+  outline: none;
+  box-shadow: none;
+  display: block;
+  height: 30px;
+  
+  line-height: 30px;
+  padding: 8px 20px;
+  border-bottom: 1px solid #eee;
+  width: 100%;
+  font-size: 12px;
+}
+.form-structor .signup .form-holder .input:last-child {
+  border-bottom: 0;
+}
+.form-structor .signup .form-holder .input::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+.form-structor .signup .submit-btn {
+  background-color: rgba(0, 0, 0, 0.4);
+  color: rgba(255, 255, 255, 0.7);
+  border: 0;
+  border-radius: 15px;
+  display: block;
+  margin: 15px auto;
+  padding: 15px 45px;
+  width: 100%;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  opacity: 1;
+  visibility: visible;
+  -webkit-transition: all 0.3s ease;
+}
+.form-structor .signup .submit-btn:hover {
+  transition: all 0.3s ease;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+table{
+	border-collapse: collapse;
+	margin: 10px;
+	border-radius: 5px;
+    border: 0.7px solid #cccc;
+   
+}
+table td{
+	font-size: 10px;
+}
+	</style>
+
+
+</head>
+<body>
+<div class="form-structor">
+    <div class="signup">
+        <h2 class="form-title" id="signup"><span>or</span>Upload</h2>
+        <form action="{% url 'Form' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-holder">
+            <input type="text" class="input" name="title" placeholder="Title" required />
+            <textarea class="input" name="description" placeholder="description" required /></textarea>
+            <input type="file" class="input" name="image" placeholder="Image" required />
+            <div class="Category" class="input"> 
+            	<table border="border: 0.7px solid #cccc;">
+            <label for="table" class="input">Choose category:--</label>		
+            <tr >
+            	<td><label for="checks[]">Rain</label>
+					<input type="checkbox" name="checks[]" value="rain" /></td>
+				<td>
+					<label for="checks[]">Town</label>
+					<input type="checkbox" name="checks[]" value="town" />
+				</td>
+				<td>
+					<label for="checks[]">Village</label>
+	  				<input type="checkbox" name="checks[]" value="village" />
+				</td>
+            </tr>
+            <tr>
+            	<td>
+            		<label for="checks[]">Home</label>
+					<input type="checkbox" name="checks[]" value="home" />
+            	</td>
+            	<td>
+            		<label for="checks[]">Autum</label>
+					<input type="checkbox" name="checks[]" value="autum" />
+            	</td>
+            	<td>
+            		<label for="checks[]">libray</label>
+					<input type="checkbox" name="checks[]" value="library" />
+            	</td>
+            </tr>
+            <tr>
+            	<td>
+            		<label for="checks[]">books</label>
+					<input type="checkbox" name="checks[]" value="books" />
+            	</td>
+            	<td>
+            		<label for="checks[]">Winter</label>
+					<input type="checkbox" name="checks[]" value="winter" />
+            	</td>
+            	<td>
+            		<label for="checks[]">Temples</label>
+					<input type="checkbox" name="checks[]" value="temples" />
+            	</td>
+            </tr>
+            <tr>
+            	<td>
+            		<label for="checks[]">Tourist PLaces</label>
+					<input type="checkbox" name="checks[]" value="Tourist places" />
+            	</td>
+            	<td>
+            		<label for="checks[]">Robots</label>
+					<input type="checkbox" name="checks[]" value="robots" />
+            	</td>
+            	<td>
+            		<label for="checks[]">Car</label>
+					<input type="checkbox" name="checks[]" value="car" />
+            	</td>
+            </tr>
+            <tr>
+            	<td>
+            		<label for="checks[]">bike</label>
+					<input type="checkbox" name="checks[]" value="Tourist places" />
+            	</td>
+            	<td>
+            		<label for="checks[]">Nature</label>
+					<input type="checkbox" name="checks[]" value="Nature" />
+            	</td>
+            	<td>
+            		<label for="checks[]">Black</label>
+					<input type="checkbox" name="checks[]" value="black" />
+            	</td>
+            </tr>
+            </table>
+            
+            </div>
+
+        </div>
+       <input type="submit" class="submit-btn">
+        </form>
+    </div>
+</body>
+</html>
+<body>
+	

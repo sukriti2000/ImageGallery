@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>hello</title>
+	<style type="text/css">
+		.modal{
+			position: fixed;
+			z-index: 10;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			background-color: rgba(0,0,0,0.4);
+			top: 0;
+			transition: 0.5s ease;
+		}
+		.modal-content{
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%,-50%);
+			background-color: #fefefe;
+			padding: 20px;
+			border: 1px solid #888;
+			width: 400px;
+			transition: 0.5s ease;
+		}
+		.close{
+			color: #aaa;
+			font-size: 28px;
+			font-weight: bold;
+			float: right;
+		}
+		.close:hover{
+			color: black;
+			text-decoration: none;
+			cursor: pointer;
+		}
+	</style>
+	<script type="text/javascript">
+		function a(){
+			fetch(`https://api.pexels.com/v1/search?query=nature&page=1&per_page=5`, {
+			    headers: {
+			        'Authorization': '563492ad6f9170000100000133c243b888a243108046c60b94d26513'
+			    }
+			})
+			.then(response=>response.json())
+			.then(data => {
+				console.log(data);
+				const img=document.createElement('img');
+				img.setAttribute('src',data.photos[0].src.original);
+				img.setAttribute('height','300');
+				img.setAttribute('width','300');
+				img.addEventListener('click',function(){
+					console.log('hello');
+					box(data.photos[0]);
+				});
+				document.querySelector('body').append(img);
+			});
+		}
+		function box(x){
+			const modal=document.createElement('div');
+			modal.className="modal";
+			modal.innerHTML=`
+			<div class="modal-content">
+			<span class="close" onclick="cls()">&times;</span>
+			<img src="${x.src.large}" id="myModalImage" height="200px" width="200px">
+			<ul>
+				<li>${x.photographer}</li>
+				<li> ${x.height}</li>
+				<li>${x.width}</li>
+				<li><a href="${x.src.original}" download>original</a></li>
+				<li><a href="${x.src.large}" download>Large</a></li>
+				<li>${x.src.medium}</li>
+				<li>${x.src.portrait}</li>
+			</ul>
+			</div>
+			`;
+			document.querySelector('body').append(modal);
+			// document.querySelector('.modal').style.display='block';
+		}
+		function cls(){
+			var modals=document.querySelectorAll(".modal");
+			for(var i = 0; i<modals.length; i++) {
+			    modals[i].style.display="none";
+			}
+		}
+	</script>
+</head>
+<body>
+	<button onclick="a()">A</button>
+	<!-- <div class="modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<img src="https://images.pexels.com/photos/807598/pexels-photo-807598.jpeg" id="myModalImage" height="200px" width="200px">
+			<ul>
+				<li>Photographer</li>
+				<li>height</li>
+				<li>width</li>
+				<li>original</li>
+				<li>large</li>
+				<li>medium</li>
+				<li>portraits</li>
+			</ul>
+		</div>
+	</div> -->
+</body>
+</html>

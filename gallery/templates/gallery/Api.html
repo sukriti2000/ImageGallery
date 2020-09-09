@@ -1,0 +1,711 @@
+{% extends "gallery/layout.html" %}
+{% load static %}
+{% block style %}
+ <style>
+ 	.*{
+ 		margin: 0;
+ 		padding:0;
+ 		
+ 	}
+ 	body{
+ 		max-width: 100vw;
+ 	}
+ 	.title{
+		background-image:url("{% static 'gallery/background.jpg' %}");
+		height: 500px;
+		max-width: 100vw;
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: cover;
+		background-attachment: fixed;
+		margin-bottom: 20px;   
+		 }
+	.line{
+		padding-top:200px;
+		padding-left: 30%;
+		height: 200px;
+		width: 70%;
+	}			
+	.line h1{
+		align-items: justify;
+		font-size: 45px;
+		color: white;
+		padding-bottom: 20px;
+	}
+	.form2{
+		display: flex;
+		height: 60px;
+	}
+	.form2 input{
+		border-bottom-left-radius: 6px;
+        border-top-left-radius: 6px;
+        border:none;
+        width: 700px;
+        padding: 20px;
+        font-size: 20px;
+	}
+	.form2 button{
+		border: none;
+        background-color: white;
+        border-bottom-right-radius: 6px;
+        border-top-right-radius: 6px;
+        align-items: center; 
+        padding: 20px;
+        font-size: 20px;
+	}
+	.container{
+		display: flex;
+		flex-wrap: wrap;
+		max-width: 100%; 
+		justify-content: space-around;
+		align-items: center;
+		z-index: 20;
+		
+	}
+	.single{
+		position: relative;
+		flex-wrap: wrap;
+		flex: 25%;
+		max-width: 25%;
+		height: 400px;
+		transition: 0.5s ease;
+		overflow: hidden; 
+		transition: 0.5s ease,all; 
+		overflow: hidden;
+	}
+	.single>img{
+		min-height: 100%;
+		width: 100%;
+		transition: 0.5s ease;
+	}
+	.single:hover img{
+		transform: scale(1.2);
+
+	}
+	.hover_div{
+		display: none;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0,0,0,0.5);
+		transition:.5s ease;
+		align-content: center;
+		justify-content: justify;
+	}
+		.single:hover .hover_div{
+		display:block; 
+	}
+	
+	.hover_profile_space ul li{
+		list-style: none;
+		display: inline-block;
+		margin-top: 330px;
+    	margin-left: 20px;
+    	font-size: 24px;
+	}
+	.hover_profile_circle{
+		padding: 10px 10px;
+    	width: 50px;
+    	height: 50px;
+    	background-color: black;
+    	border-radius: 25px;
+    	color: white;
+    	font-size: 16px;
+    	overflow: hidden;
+    	text-align: center;
+    	margin-top: 330px;
+    	margin-left: 20px;
+    	
+	}
+	.hover_profile_circle a{
+		text-decoration: none;
+		color: white
+	}
+
+	.page{
+		display: flex;
+		align-content: center;
+		justify-content: center;
+	}
+	.page li{
+		text-decoration: none;
+		display: inline-block;
+		padding: 20px;
+		height: 50px;
+		width: 190px;
+		
+	}
+	.page li a{
+		text-decoration: none;
+		color: black;
+		font-weight: 600;
+		font-size: 20px;
+	
+	}
+	.page li:hover{
+		border-bottom: 2px solid blue;
+	}
+
+	.modal{
+		
+		position: fixed;
+		z-index: 100;
+		/*top: 0;*/
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background-color: rgba(0,0,0,0.4);
+		top : 0;
+		transition : 0.5s ease;
+		
+	}
+
+	.modal-content{
+		position: fixed;
+		overflow-y: scroll;
+		top: 50%;
+		left:50%;
+		transform: translate(-50% , -50%);
+		background-color: #fefefe;
+		padding: 20px;
+		border: 1px solid #888;
+		background-color : white;
+		width: 900px; 
+		height: 750px;
+		transition : 0.5s ease;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.close{
+		position:fixed;
+		right : 30px;
+		top : 50px;
+		color: white;
+		font-size: 28px;
+		font-weight: bold;  
+		
+	}
+	.close:hover,.close:focus{
+		color: black;
+		text-decoration: none;
+		cursor: pointer;
+	}
+	.top{
+		flex : 100%;
+		width: 100%;
+		display: flex;
+		height: auto;
+		align-content: center;
+		align-items: center;
+	}
+
+	 .top .left{
+    	flex: 50%;
+    	box-sizing: border-box;
+    	max-width: 50%;
+    	padding-left: 20px;
+    }
+    .top .profile_circle{
+    	
+    	width: 70px;
+    	height: 70px;
+    	background-color: black;
+    	border-radius: 50%;
+    	color: white;
+    	font-size: 16px;
+    	text-overflow: hidden;
+    	display: flex;
+    	align-items: center;
+    	text-align: center;
+    	/*padding-top: 10px;*/
+    }
+    .top .profile_circle a{
+    	text-decoration: none;
+    	color: white;
+    }
+     .top .right{
+    	flex: 50%;
+    	max-width: 50%;
+    	justify-content: flex-end;
+    	/*padding: 20px;*/
+    	box-sizing: border-box;
+    }
+    
+    .left li{
+    	list-style: none;
+    	display: inline-block;
+    	align-items:center;
+    	
+    	    }
+
+    .right li{  
+    	list-style: none;
+    	display: inline-block;
+    	padding: 10px;   
+    	height: 40px;
+    	width: 100px;
+    	text-align: center;
+    	position: relative;
+    }
+    .sub-menu{
+		display: block;
+		position: absolute;
+		height : 0;
+		background-color: white;
+		margin-top:10px;
+		overflow: hidden;
+		right: 0px;
+		transition: 0.5s ease;
+	}
+	.right ul li:hover .sub-menu{
+		height: auto;
+	}
+	.sub-menu ul li{
+		height:50px;
+		width: 180px;
+		color: black;
+		border:0.7px solid #cccccc;
+	}
+	.sub-menu ul li a{
+		text-decoration: none;
+		font-size: 20px;
+		color: black;
+		display: block;
+	}
+	.sub-menu ul li:hover{
+		cursor: pointer;
+		background-color: black;
+		color: white;
+	}
+	.sub-menu ul li a:hover{
+		color: white;
+		display: block;
+	}
+
+	.main-image{
+		flex: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 600px;
+		padding: 20px 0;
+
+	}
+	.main-image img{
+		max-width: 500px;
+		max-height: 500px;
+	}
+	
+    .info{
+		flex: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.info .button ul{
+		display: flex;
+		justify-content: center;
+	}
+
+	.info .button ul li{
+		text-decoration: none;
+		list-style: none;
+		height: 30px;
+		width: 80px;
+		border: 1px solid white;
+		text-align: center;
+		padding: 5px 10px;
+		margin: 5px;
+		background-color: #05a081;
+		color: white;
+	}
+	
+	
+    
+	.info .det ul li{
+      list-style: none;
+
+	}
+	.det{
+		height: auto;
+		width: 250px;
+		border:0.7px solid #cccccc;
+		text-align: justify;
+		margin: 10px;
+		margin-left: 35%;
+		padding: 10px;
+		color: black;
+	}
+	@media(max-width: 540px){
+		
+		.top{
+			flex-direction: column;
+			height: auto;
+			
+			display: flex;
+			
+		}
+		.top .left{
+			flex: 100%;
+			max-width: 100%;
+			display: flex;
+			margin-bottom: 20px;
+			padding-left: 0;
+			
+		}
+		.top .right{
+			flex: 100%;
+			max-width: 100%;
+			margin-left: -270px;
+			display: flex;
+			justify-content: center;
+
+		}
+		.right>ul{
+   			display: flex;
+   			justify-content: flex-start;
+   			max-width: 100%;
+   		}	
+   		.info{
+   			max-width: 100%;
+   			justify-content: center;
+   		}
+   		.det{
+   			margin: 0;
+   			margin-top: 10px;
+   		}
+	}
+    @media(max-width: 540px){
+
+    	.box-area{ 
+		flex-direction: column;
+		
+		}
+	.single{
+		flex: 100%;
+		max-width: 100vw;
+		height: 300px;
+    }
+    .title{
+		height: 300px;
+		max-width: 100vw;
+		margin-bottom: 10px;
+		 }
+	.line{
+		padding-top:100px;
+		padding-left: 20%;
+		height: 100px;
+		width: 90%;
+	}			
+	.line h1{
+		
+		font-size: 20px;
+		
+		padding-bottom: 19px;
+	}
+	.form2{
+		height: 30px;
+	   }
+	.form2 input{
+		border-bottom-left-radius: 3px;
+        border-top-left-radius: 3px;
+        width: 300px;
+        padding: 10px;
+        font-size: 12px;
+	}
+	.form2 button{
+		border-bottom-right-radius: 3px;
+        border-top-right-radius: 3px;
+        padding: 10px;
+        font-size: 12px;
+	}
+	.page li{
+		padding: 15px;
+		height: 40px;
+		width: 140px;
+		justify-content: center;
+		}
+	.page li a{
+		font-size: 12px;
+	   }
+	   .profile_pic{ 
+		max-width: 50%;
+		max-height:100%;
+		flex:50%;
+		display: flex;
+		justify-content: justify;
+		padding-top: 170px;
+		padding-left: 10px;
+
+	}
+	.pic_detail{
+		flex :50%;
+        height: 100%;
+		width: 50%;
+		display: flex;
+		justify-content:flex-end;
+		padding-top:170px;
+		padding-right: 10px;
+		color: white;
+	}
+	.pic_detail i{
+		font-size: 16px;
+		color: white;
+		
+	}
+	.hover_profile_space ul li{
+		
+		margin-top: 260px;
+    	margin-left: 20px;
+    	font-size: 24px;
+	}
+	.modal{
+			max-width: 100vw;
+		}
+		.modal-content{
+			height: 80vh;
+			width: 80vw;
+		}
+	.main-image{ 
+		flex: 100%;
+		align-items: center;
+		justify-content: center;
+		height: 250px;
+		padding: 20px 10px;
+
+	}
+	.main-image img{
+		max-width: 200px;
+		max-height: 200px;
+	}
+	.navbar-links{
+                position: fixed;
+                margin-bottom: 0;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: #05a081;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                clip-path: circle(100px at 100% -22%);
+                -webkit-clip-path: circle(100px at 100% -22%);
+                transition: all 1s ease-out;
+             }
+             .navbar-links.open{
+                clip-path: circle(650px at 100% -22%);
+                -webkit-clip-path: circle(650px at 100% -22%);
+             }
+            
+             .navbar-links ul{
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+             }
+             .navbar-links ul li{
+                padding: 35px;
+
+             }
+
+             .ham{
+                display: block;
+                z-index: 2;
+             }
+             header .search{
+            display: none;
+        }
+        .fa-download{
+        	display: none;
+        }
+    }
+ </style>
+{% endblock %}
+{% block body %}
+ <div class="title">
+  		<div class="line">
+            <h1>The best free stock photos shared by talented creators.</h1>
+            <div  class="form2">
+               
+                <input type="text" name="search" placeholder="Search for Free Photos" class="provide">
+                <button onclick="a()"><i class="fa fa-search" aria-hidden="true" ></i></button>
+            </div>
+        </div>
+         </div>
+         <div class="page">
+        	<ul>
+        	<li><a href="{% url 'index'%}" >All Images</a></li>
+        	<li style="border-bottom: 2px solid blue"><a href="{% url 'api' %}">Search Online</a></li>
+        </div>
+        <hr>
+        <div class="container">
+        	
+        	</div>
+     <script>
+     	let counter=0;
+     	const quantity=12;
+     	document.addEventListener('DOMContentLoaded',function(){
+     		fetch(`https://api.pexels.com/v1/search?query=nature&page=1&per_page=36`,{
+				headers:{
+					'Authorization':'563492ad6f9170000100000133c243b888a243108046c60b94d26513'  
+				}
+			})
+			.then(response=>response.json())
+			.then(data=>{
+				console.log(data);
+				// data.photos.forEach(photo=>{
+				// 	addphotos(photo);
+				// })
+				counter=0;
+				localStorage.setItem('results',JSON.stringify(data));
+				load();
+			});
+     	})
+     	
+     	function load(){
+     		var data=JSON.parse(localStorage.getItem('results'));
+     		for(var i=counter;i<counter+quantity;i++){
+     			addphotos(data.photos[i]);
+     		}
+     	}
+     	window.onscroll=()=>{
+     		  if (window.scrollY < 300) {
+		  	document.querySelector(".search").style.display = "none";
+		    document.querySelector('header').style.background="transparent";
+		  } else {
+		  	document.querySelector('header').style.backgroundColor="#232a34";
+		    
+		   
+		  }
+		  if(window.innerHeight+window.scrollY>=document.body.offsetHeight){
+		  	counter=counter+quantity;
+		  	load();
+		  }
+		}
+
+		function a(){
+			document.querySelector(".container").innerHTML="";
+
+			const search_item = document.querySelector('.provide').value;
+			document.querySelector(".provide").value="";
+			fetch(`https://api.pexels.com/v1/search?query=${search_item}&page=1&per_page=36`,{
+				headers:{
+					'Authorization':'563492ad6f9170000100000133c243b888a243108046c60b94d26513'  
+				}
+			})
+			.then(response=>response.json())
+			.then(data=>{
+				console.log(data);
+				// data.photos.forEach(photo=>{
+				// 	addphotos(photo);
+				// })
+				counter=0;
+				localStorage.setItem('results',JSON.stringify(data));
+				load();
+			});
+			// });
+		}
+		function addphotos(x) {
+			const single=document.createElement("div");
+			console.log(single);
+			single.className='single';
+			
+			const image=document.createElement("img")
+			image.setAttribute('src',x.src.large);
+			
+			single.addEventListener('click' , function(){
+				
+				box(x)}); 
+			const hover_div=document.createElement("div")
+			hover_div.className='hover_div';
+			hover_div.innerHTML=`<div class="hover_profile_space">
+							<ul>
+								
+	  						   <li><a href="${x.photographer_url}" style="text-decoration:none;color:white;margin-bottom:30px;">${x.photographer}</a></li>
+							 </ul>
+									</div>`
+			single.append(image);
+			single.append(hover_div);
+
+  			document.querySelector(".container").append(single);
+
+  			
+			
+
+		}
+
+		function box(x){
+			const modal=document.createElement("div");	
+  			modal.className='modal';
+  			modal.innerHTML=`
+  						<span class="close" onclick="cls()">&times;</span>       
+  						<div class="modal-content">
+  						 	<div  class="top">
+		  						<div class="left">
+			  						<ul>
+			  						   <li class="profile_circle"><a href="${x.photographer_url}">${x.photographer}</a></li>
+			  						   <li><a href="${x.photographer_url}" style="text-decoration:none;color:black;">${x.photographer}</a></li>
+			  						</ul>
+		  						</div>
+		  						<div class="right">
+		  						 	<ul>
+					        		    <li style="background-color: #05a081;width: 130px; margin-left:200px;"><h4>Download&nbsp;<i  class="fa fa-download" aria-hidden="true"></i></h4> 
+					        				  <div class="sub-menu">
+					        				  	<ul>
+					        				  		<a href="${x.src.original}"  download><li>Original</li></a>
+					        				  		<a href="${x.src.portrait}"  download><li>portrait</li></a>
+					        				  		<a href="${x.src.large}" download><li>Large</li></a>
+					        				  		<a href="${x.src.medium}" download><li>Medium</li></a>
+					        				  		<a href="${x.src.small}"  download><li>Small</li></a>
+					        				  		
+					        				  	</ul>
+					        				  </div>
+					        			</li>
+				        			</ul>
+		  						</div>
+  						 	</div>
+  						 	<div class="main-image" >
+        						<img src="${x.src.large}" >
+        					</div>
+        					<div class="info">
+	        					<div class="button" >
+				        			<ul>
+				        				<li>info&nbsp;<i class="fa fa-info-circle" aria-hidden="true"></i></li>
+			        				</ul>
+		        				</div>
+	        				 	<div class="det">
+			        				<ul>
+	                                <li> Photographer : ${x.photographer}</li>
+			        				<li> Dimensions : ${x.height} x ${x.width}  </li>		
+			        				</ul>
+		        				</div>		
+        					</div>
+        				</div>`;
+
+        	document.querySelector("body").append(modal);		
+         
+		}
+		function cls(){
+			var modals=document.querySelectorAll(".modal");
+			for(var i = 0; i<modals.length; i++) {
+			    modals[i].style.display="none";
+			}
+		}
+		document.querySelector('.ham').addEventListener('click',function(){
+                    document.querySelector('.navbar-links').classList.toggle("open");
+                    if(document.querySelector('.container').style.display==='none'){
+                    	document.querySelector('.container').style.display='block';
+                    }
+                    else{
+                    	document.querySelector('.container').style.display='none';
+                    }
+                    
+                });
+	</script>
+
+{% endblock %}
