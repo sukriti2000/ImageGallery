@@ -16,3 +16,7 @@ Complexities in this projects-
 3. Also used ImageKit and pil for adding the functionalty of editing the images.
 4. Live view of the edited image done via JS 
 5. The website is also compatible for the mobile devices
+
+How to run -
+1.pip install -r requirements.txt
+2.python manage.py runserver
